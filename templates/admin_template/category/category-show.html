@@ -1,0 +1,125 @@
+{% extends 'admin_template/base.html' %}
+{% load static %}
+{% block body%}
+<div id="content-page" class="content-page">
+    <div class="container-fluid">
+       <div class="row">
+          <div class="col-sm-12">
+             <div class="iq-card">
+                <div class="iq-card-header d-flex justify-content-between">
+                   <div class="iq-header-title">
+                      <h4 class="card-title">category</h4>
+                   </div>
+                   {% comment %} <div class="iq-search-bar">
+                     <form action="#" class="searchbox">
+                        <input type="text" class="text search-input" placeholder="Type here to search...">
+                        <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                     </form>
+                  </div> {% endcomment %}
+                </div>
+                <div class="iq-card-body">
+                   <div id="table" class="table-editable">
+                     
+                      <span class="table-add float-right mb-3 mr-2">
+                        
+                        
+                        <a type="submit" href="{% url 'category_add' %}" class="btn btn-primary mb-3">Add</a>
+                        
+
+                      <!-- <button class="btn btn-sm iq-bg-success">
+                        <i class="ri-add-fill"><span class="pl-1">Add New</span></i> -->
+                     
+
+                      <!-- <a type="submit" href="{% url 'category_add' %}" class="btn btn-outline-success">Add New</button> -->
+                      </span>
+                      <table id="tableID" class="table table-bordered table-responsive-md table-striped text-center">
+                         <thead>
+                            <tr>
+                               <th style="text-align: center">category name</th>
+                               <th style="text-align: center">category code</th>
+                               
+                               
+                          
+                               <th style="text-align: center">Action</th>
+                              
+                            </tr>
+                         </thead>
+                         <tbody>
+                            {%for data in cat_obj %}
+                            <tr>
+                            <td>{{data.category_name}}</td>
+                            {% comment %} <td>{% if d.category_image %}
+                            <img src="{{d.category_image.url}}" width="50" height="50">
+                            {% endif %}</td> {% endcomment %}
+                            <td>{{data.category_code}}</td>
+                          
+
+
+                            
+                           
+                               <td>
+                           
+                                 <a class="me-3" href="">
+                                    <img src="{% static 'admin_static/images/icon/edit.svg'%}" alt="img">
+                                </a>
+                          
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                           
+                                <a class="me-3" href="" onclick="return confirm('Are you sure you want to delete this?')">
+                                    <img src="{% static 'admin_static/images/icon/delete.svg'%}" alt="img">
+                                </a>
+                           
+
+                                {% comment %} <a type="submit" href="{% url 'edit' d.id %}" class="iq-icons-list"><i class="fa fa-edit"></i></a> {% endcomment %}
+                                {% comment %} <a onclick="return confirm('Are you sure you want to delete this?')" type="submit" href="{% url 'delete' d.id %}" class="iq-icons-list"><i class="fa fa-trash"></i></a> {% endcomment %}
+                                 
+                               </td>
+                              
+                              
+                            </tr>
+                            {% endfor %}
+                            
+                         </tbody>
+                      </table>
+                      
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+</div>
+
+
+<script>
+   function switchFunction(id=id){
+      window.location.href=`{{baseURL}}/change_cat_status/${id}`;
+   }
+</script>
+
+
+
+<script>
+    function fileValidation(){
+      var fileInput = document.getElementById('file');
+      var filePath = fileInput.value;
+      var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+      if(!allowedExtensions.exec(filePath)){
+          alert('Please upload file having extensions .jpeg/.jpg/.png/.gif only.');
+          fileInput.value = '';
+          return false;
+      }else{
+          //Image preview
+          if (fileInput.files && fileInput.files[0]) {
+              var reader = new FileReader();
+              reader.onload = function(e) {
+                  document.getElementById('imagePreview').innerHTML = '<img src="'+e.target.result+'"/>';
+              };
+              reader.readAsDataURL(fileInput.files[0]);
+          }
+      }
+  }
+  </script>
+ {% endblock %}
