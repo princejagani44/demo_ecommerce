@@ -56,13 +56,12 @@ def category_show(request):
 
 def category_add(request):
     if request.method == 'POST':
-        print(request,'request')
-        exit()
+    
         category_name = request.POST.get('category_name')
-        category_image = request.FILES['category_image']
+        category_image = request.FILES.get('category_image')
         category_code = request.POST.get('category_code')
+            
         
-
         category=Category()
         category.category_name=category_name
         category.category_image=category_image

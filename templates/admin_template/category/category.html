@@ -8,91 +8,75 @@
          <div class="col-sm-12">
             <div class="iq-card">
                <div class="iq-card-header d-flex justify-content-between">
-       <div class="iq-header-title">
-          <h4 class="card-title">Add Categories</h4>
-       </div>
-    </div>
-    <div class="iq-card-body">
-       {% comment %} <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate, ex ac venenatis mollis, diam nibh finibus leo</p> {% endcomment %}
-       
-         
-
-         <div class="form-group">
-             <label>category name </label>
-             <input type="text" class="form-control" name="category_name" id="category_name" required>
-         </div>
-         <div class="form-group">
-             <label>category code<span style="color:red;">*</span></label>
-             <input type="text" class="form-control" value="{{category_code}}" id="category_code" name="category_code" required
-             required hx-post="{% url 'checkcode' %}" hx-target="#category_codecheck" hx-trigger="keyup">
-             <div id="category_codecheck"></div>
-             
-            <div class="mb-3">
-                <label>category image</label>
-                <input  type="file" class="form-control" id="category_image" name="category_image" accept="image/jpeg" required/>
+                  <div class="iq-header-title">
+                     <h4 class="card-title">Add Categories</h4>
+                  </div>
                </div>
-          </div>
+               <div class="iq-card-body">
+                  <form method="post">
+                     {% csrf_token %}
+                  <div class="form-group">
+                     <label>category name </label>
+                     <input type="text" class="form-control" name="category_name" id="category_name" required>
+                  </div>
+                  <div class="form-group">
+                     <label>category code<span style="color:red;">*</span></label>
+                     <input type="text" class="form-control" value="{{category_code}}" id="category_code" name="category_code" required
+                        required hx-post="{% url 'checkcode' %}" hx-target="#category_codecheck" hx-trigger="keyup">
+                     <div id="category_codecheck"></div>
 
-          {% comment %} <div class="md-3">
-            <div class="form-group">
-               <label>SKU<span style="color:red;">*</span></label>
-               <input class="form-control" type="text" value="{{product_sku}}" class="product_sku" name="product_sku" required 
-               required hx-post="{% url 'checksku' %}" hx-target="#product_skucheck" hx-trigger="keyup">
-               <div id="product_skucheck"></div>
-            </div>	
-         </div> {% endcomment %}
-
-         
-          {% comment %} <div class="form-group">
-             <label>category status</label>
-             <input type="text" class="form-control" name="category_status" required>
-          </div> {% endcomment %}
-         
-          
-          <br><br>
-          <button  onclick="add_cat()" class="btn btn-primary">Submit</button>&nbsp;
-          &nbsp;
-          <a type="submit" href="{% url 'category_show' %}" class="btn iq-bg-danger">Cancel</a> 
-
-    </div>
- </div>
+                     <div class="mb-3">
+                        <label>category image</label>
+                        <input type="file" class="form-control" id="category_image" name="category_image" accept="image/jpeg" required />
+                     </div>
+                  </div>
 
 
-
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
- 
- 
- <script>
-   function add_cat(){
-      let cat_name = $("#category_name").val();
-      let cat_code = $("#category_code").val();
-      let cat_image=$('#category_image')[0].files[0]
-      var formData = new FormData();
-      
-      formData.append('image', $('#category_image')[0].files[0]);
-      console.log(cat_image,'cat_image')
-
-      $.ajax(
-		{
-         async: false,
-         dataType: 'json',
-			type:"POST",
-			url: "{% url 'category_add' %}",
-         mimeType: "multipart/form-data",
-			data:formData,
-			success: function( data ) 
-
-			{
-
-            window.location.href = '/category_show/';
-            //console.log(data);
-            
-			},
-         
-		 })
-
-  }
-   </script>
+                  <br><br>
+                  <button onclick="add_cat()" class="btn btn-primary">Submit</button>&nbsp;
+                  &nbsp;
+                  <a type="submit" href="{% url 'category_show' %}" class="btn iq-bg-danger">Cancel</a>
+               </div>
+            </form>
+            </div>
 
 
-{% endblock %}
+
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+            <script>
+               function add_cat() {
+                   let cat_name = $("#category_name").val();
+                   let cat_code = $("#category_code").val();
+                   let cat_image = $('#category_image')[0].files[0];
+                   var formData = new FormData();
+                   formData.append('category_name', cat_name);
+                   formData.append('category_code', cat_code);
+                   formData.append('category_image', cat_image);
+
+                   // Get CSRF token from hidden input field in the form
+                   var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+                   $.ajax({
+                       type: "POST",
+                       url: "{% url 'category_add' %}",
+                       data: formData,
+                       headers: {
+                           'X-CSRFToken': csrftoken
+                       },
+                       contentType: false,
+                       processData: false,
+                       success: function(data) {
+                           // Redirect to category_show page after successful submission
+                           window.location.href = '{% url 'category_show' %}';
+                           //console.log(data);
+                       },
+                       error: function(xhr, status, error) {
+                           console.error(xhr.responseText);
+                       }
+                   });
+               }
+
+            </script>
+
+
+            {% endblock %}
