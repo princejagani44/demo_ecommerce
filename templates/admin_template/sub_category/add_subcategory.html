@@ -1,0 +1,137 @@
+{% extends 'admin_template/base.html' %}
+{% load static %}
+{% block body%}
+<div id="content-page" class="content-page">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="iq-card">
+               <div class="iq-card-header d-flex justify-content-between">
+       <div class="iq-header-title">
+          <h4 class="card-title">Add Sub Categories</h4>
+       </div>
+    </div>
+    <div class="iq-card-body">
+       {% comment %} <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vulputate, ex ac venenatis mollis, diam nibh finibus leo</p> {% endcomment %}
+       <form method="post">
+         {% csrf_token %}
+         <input type="hidden" id="sub_cat_id" name="sub_cat_id" value="{{sub_cat_obj.id}}">
+         <div class="form-group">
+            <label>parent category</label>
+            <select name="category_id" id="category_id" class="form-control form-control-sm mb-3 select2">
+               <option>choose category</option>
+                {% for i in cat_obj %}
+               <option value="{{i.id}}" {% if i.id == sub_cat_obj.category_id.id %} selected {% endif %}>
+                    {{i.category_name}}
+               </option>
+               {% endfor %}
+            </select>
+         </div>
+         <div class="form-group">
+             <label>sub category name </label>
+             <input type="text" class="form-control" id="sub_category_name" name="sub_category_name" value="{{sub_cat_obj.sub_category_name}}" required>
+          </div>
+          <div class="mb-3">
+             <label>sub category image</label>
+             <input  type="file" class="form-control" id="sub_category_image" name="sub_category_image" accept="image/jpeg"  required/>
+            </div>
+          <div class="form-group">
+             <label>sub category code<span style="color:red;">*</span></label>
+             <input type="text" class="form-control" id="sub_category_code"  name="sub_category_code" value="{{sub_cat_obj.sub_category_code}}" required
+             required hx-post="{% url 'checksubcode' %}" hx-target="#sub_category_codecheck" hx-trigger="keyup">
+             <div id="sub_category_codecheck"></div>
+            </div>
+
+          {% comment %} <div class="form-group">
+            <label>category code<span style="color:red;">*</span></label>
+            <input type="text" class="form-control" value="{{category_code}}" name="category_code" required
+            required hx-post="{% url 'checkcode' %}" hx-target="#category_codecheck" hx-trigger="keyup">
+            <div id="category_codecheck"></div>
+           
+         </div> {% endcomment %}
+          
+          {% comment %} <div class="form-group">
+             <label>category status</label>
+             <input type="text" class="form-control" name="category_status" required>
+          </div> {% endcomment %}
+         
+         
+          <br><br>
+          <a onclick="add_sub_cat()" class="btn btn-primary">Submit</a>
+          &nbsp;&nbsp;
+          <a type="submit" href="{% url 'show_subcategory' %}" class="btn iq-bg-danger">Cancel</a> 
+
+         </form>
+    </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+            <script>
+               function add_sub_cat() {
+                  let sub_cat_name = $("#sub_category_name").val();
+                  let sub_cate_code = $("#sub_category_code").val();
+                  let cat_id = $("#category_id").find(":selected").val();
+                  let sub_cat_image = $('#sub_category_image')[0].files[0];
+                  let sub_cat_id = $('#sub_cat_id').val();
+
+                  var formData = new FormData();
+                  formData.append('sub_category_name', sub_cat_name);
+                  formData.append('sub_category_code', sub_cate_code);
+                  formData.append('sub_category_image', sub_cat_image);
+                  formData.append('category_id', cat_id);
+
+                  formData.append('sub_cat_id', sub_cat_id);
+
+
+                   // Get CSRF token from hidden input field in the form
+                   var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+                   $.ajax({
+                       type: "POST",
+                       url: "{% url 'add_subcategory' %}",
+                       data: formData,
+                       headers: {
+                           'X-CSRFToken': csrftoken
+                       },
+                       contentType: false,
+                       processData: false,
+                       success: function(data) {
+                           // Redirect to category_show page after successful submission
+                           window.location.href = '{% url 'show_subcategory' %}';
+                           //console.log(data);
+                       },
+                       error: function(xhr, status, error) {
+                           console.error(xhr.responseText);
+                       }
+                   });
+               }
+
+            </script>
+
+
+            <script>
+               var data= document.getElementById('sub_cat_id');
+               var img= document.getElementById('sub_category_image');
+               console.log(data.value,'aaaaaaaaaaa')
+               if(data.value==""){
+                  img.setAttribute('required', "true");
+               }
+               else{
+                  img.removeAttribute('required');
+            
+               }
+            </script>
+
+
+
+ {% endblock %}
+
+
+

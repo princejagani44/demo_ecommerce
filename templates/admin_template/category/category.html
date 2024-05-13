@@ -15,13 +15,14 @@
                <div class="iq-card-body">
                   <form method="post">
                      {% csrf_token %}
+                     <input type="hidden" id="cat_id" name="cat_id" value="{{category_obj.id}}">
                   <div class="form-group">
                      <label>category name </label>
-                     <input type="text" class="form-control" name="category_name" id="category_name" required>
+                     <input type="text" class="form-control" name="category_name" id="category_name" value="{{category_obj.category_name}}" required>
                   </div>
                   <div class="form-group">
                      <label>category code<span style="color:red;">*</span></label>
-                     <input type="text" class="form-control" value="{{category_code}}" id="category_code" name="category_code" required
+                     <input type="text" class="form-control"  id="category_code" name="category_code" value="{{category_obj.category_code}}" required
                         required hx-post="{% url 'checkcode' %}" hx-target="#category_codecheck" hx-trigger="keyup">
                      <div id="category_codecheck"></div>
 
@@ -46,13 +47,17 @@
 
             <script>
                function add_cat() {
-                   let cat_name = $("#category_name").val();
-                   let cat_code = $("#category_code").val();
-                   let cat_image = $('#category_image')[0].files[0];
-                   var formData = new FormData();
-                   formData.append('category_name', cat_name);
-                   formData.append('category_code', cat_code);
-                   formData.append('category_image', cat_image);
+                  let cat_name = $("#category_name").val();
+                  let cat_code = $("#category_code").val();
+                  let cat_image = $('#category_image')[0].files[0];
+                  let cat_id = $('#cat_id').val();
+
+                  var formData = new FormData();
+                  formData.append('category_name', cat_name);
+                  formData.append('category_code', cat_code);
+                  formData.append('category_image', cat_image);
+                  formData.append('cat_id', cat_id);
+
 
                    // Get CSRF token from hidden input field in the form
                    var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
@@ -79,4 +84,18 @@
             </script>
 
 
-            {% endblock %}
+            <script>
+               var data= document.getElementById('cat_id');
+               var img= document.getElementById('category_image');
+               console.log(data.value,'aaaaaaaaaaa')
+               if(data.value==""){
+                  img.setAttribute('required', "true");
+               }
+               else{
+                  img.removeAttribute('required');
+            
+               }
+            </script>
+
+
+{% endblock %}

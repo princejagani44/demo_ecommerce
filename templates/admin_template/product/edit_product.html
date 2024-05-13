@@ -1,0 +1,177 @@
+{% extends 'admin_template/base.html' %}
+{% load static %}
+{% block body%}
+<style>
+   .sku{color:red;}
+</style> 
+
+<div id="content-page" class="content-page">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="iq-card">
+               <div class="iq-card-header d-flex justify-content-between">
+                  <div class="iq-header-title">
+          <h4 class="card-title">Edit Product</h4>
+       </div>
+    </div>
+    <div class="iq-card-body">
+       <form method="post" action="{% url 'edit_product' d.id %}" enctype="multipart/form-data">
+         {% csrf_token %}	
+         {% comment %} <div class="form-group">
+            <label>Product id</label>
+            <input type="text" class="form-control" name="product_id" value={{d.product_id}}>
+         </div> {% endcomment %}
+         <div class="mb-3">
+            <label>Product name<span style="color:red;">*</span></label>
+            <input type="text" class="form-control" name="product_name" required="" value={{d.product_name}}>
+           </div>
+         <div class="form-group">
+            <label>Product sku<span style="color:red;">*</span></label>
+            <input type="text" class="form-control" name="product_sku" required="" hx-post="/add_product/checksku" hx-target="#sku-check" hx-trigger="keyup" value={{d.product_sku}}>
+         </div>
+         <div class="form-group">
+           <label>Product size</label>
+           <input type="text" class="form-control" name="product_size" value={{d.product_size}}>
+        </div>
+        <div class="mb-3">
+           <label>Product weight</label>
+           <input type="text" class="form-control" name="product_weight" value={{d.product_weight}}>
+          </div>
+        <div class="form-group">
+           <label>Price<span style="color:red;">*</span></label>
+           <input type="text" class="form-control" name="price" required="" value={{d.price}}>
+        </div>
+        <div class="form-group">
+           <label>Image<span style="color:red;">*</span></label>
+           <input id="file" type="file" class="form-control" name="images" accept="image/jpeg" onchange="return fileValidation()" >
+        </div>
+        {% comment %} <div class="mb-3">
+           <label>Category id</label>
+           <input type="text" class="form-control" name="category_id" required/>
+        </div> {% endcomment %}
+
+        {% comment %} <div class="form-group">
+           <label>Category Name<span style="color:red;">*</span></label>
+           <select name="category_id" class="form-control form-control-sm mb-3 select2">
+              <option>choose category</option>
+               {% for i in cat_obj %}
+              <option value="{{i.id}}" {% if d.category_id.id == i.id %}selected{% endif %}>
+                   {{i.category_name}}
+              </option>
+              {% endfor %}
+           </select>
+        </div>
+        <div class="form-group">
+           <label>Sub Category Name<span style="color:red;">*</span></label>
+           <select name="sub_category_id" class="form-control form-control-sm mb-3 select2">
+              <option>choose subcategory</option>
+               {% for i in sub_cat_obj %}
+              <option value="{{i.id}}" {% if d.sub_category_id.id == i.id %}selected{% endif %}>
+                   {{i.sub_category_name}}
+              </option>
+              {% endfor %}
+           </select>
+        </div> {% endcomment %}
+
+
+        <div class="form-group">
+         <label>Category Name<span style="color:red;">*</span></label>
+         <select name="category_id" id='category_name' onchange="getproduct()" class="form-control form-control-sm mb-3 select2" >
+            <option>choose category</option>
+            {% for i in cat_obj %}
+            <option value="{{i.id}}" {% if d.category_id.id == i.id %} selected {% endif %}>
+                 {{i.category_name}}
+            </option>
+            {% endfor %} 
+         </select>
+      </div>
+      <div class="form-group">
+         <label>Sub Category Name<span style="color:red;">*</span></label>
+         <select name="sub_category_id" id='sub_category_name' class="form-control form-control-sm mb-3 select2">
+            <option>choose sub category</option>
+             {% for i in sub_cat_obj %}
+            <option value="{{i.id}}" {% if d.sub_category_id.id == i.id %} selected {% endif %}>
+                 {{i.sub_category_name}}
+            </option>
+            {% endfor %}  
+         </select>
+      </div>
+        {% comment %} <div class="form-group">
+           <label>Brand id<span style="color:red;">*</span></label>
+           <select name="brand_id" class="form-control form-control-sm mb-3">
+              <option>choose brand</option>
+               {% for i in brand_obj %}
+              <option value="{{i.id}}" {% if d.brand_id.id == i.id %}selected{% endif %}>
+                   {{i.brand_name}}
+              </option>
+              {% endfor %}
+           </select>
+        </div> {% endcomment %}
+        <div class="form-group">
+           <label>Product status<span style="color:red;">*</span></label>
+           <select name="product_status" class="form-control form-control-sm mb-3">
+              <option value="Active" {% if d.product_status == 'Active' %}selected{% endif %}>Active</option>
+              <option value="InActive" {% if d.product_status == 'InActive' %}selected{% endif %}>InActive</option>
+           </select>
+        </div>
+        <div class="mb-3">
+           <label>Product color</label>
+           <input type="text" class="form-control" name="product_color" value={{d.product_color}}>
+          </div>
+        <div class="form-group">
+           <label>Tax<span style="color:red;">*</span></label>
+           <select name="tax_id" class="form-control form-control-sm mb-3 select2">
+              <option>choose tax</option>
+               {% for i in tax_obj %}
+              <option value="{{i.id}}" {% if d.tax_id.id == i.id %}selected{% endif %}>
+                   {{i.tax_name}} {{i.tax_per}}%
+              </option>
+              {% endfor %}
+           </select>
+        </div>
+           <br>
+        
+          <button type="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
+          <a type="submit" href="{% url 'show_product' %}" class="btn iq-bg-danger">Cancel</a> 
+
+         </form>
+      </div>
+   </div>
+</div>
+</div>
+</div>
+
+    </div>
+ </div>
+</div>
+
+
+<script>
+   function getproduct(){
+      var category_name=$('#category_name').find(":selected").val();
+      console.log(category_name,'category_name')
+      $.ajax(
+         {
+            type:"GET",
+            url: "{% url 'getproduct' %}",
+            data:{
+               category_name: category_name
+            },
+            success: function( data ) 
+            {
+               console.log(data);
+              var datas=JSON.parse(data)
+              $('#sub_category_name').empty();
+              $('#sub_category_name').append('<option>choose sub category</option>')
+              $.each(datas, function(i,item){
+               $('#sub_category_name').append('<option value="'+item.pk+'">'+item.fields.sub_category_name+'</option>')
+              })
+              //$('#state_name').append("<option value='0'>Choose State</option>")
+             
+            }
+          })
+   } 
+   
+</script> 
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'admin_template/base.html' %}
+{% load static %}
+{% block body%}
+<div id="content-page" class="content-page">
+   <div class="container-fluid">
+      <div class="row">
+         <div class="col-sm-12">
+            <div class="iq-card">
+               <div class="iq-card-header d-flex justify-content-between">
+       <div class="iq-header-title">
+          <h4 class="card-title">Edit Subcategory</h4> 
+       </div>
+    </div>
+    <div class="iq-card-body">
+       <form method="post" action="{% url 'edit_subcategory' d.id %}" enctype="multipart/form-data">
+         {% csrf_token %}	
+
+         <div class="form-group">
+            <label>Parent Category</label>
+            <select name="category_id" class="form-control form-control-sm mb-3 select2">
+               <option>choose category</option>
+                {% for i in cat_obj %}
+               <option value="{{i.id}}" {% if d.category_id.id == i.id %}selected{% endif %}>
+
+                    {{i.category_name}}
+               </option>
+               {% endfor %}
+            </select>
+         </div>
+
+
+
+
+
+
+         <div class="form-group">
+             <label>sub category name </label>
+             <input type="text" class="form-control" name="sub_category_name" value={{d.sub_category_name}}>
+          </div>
+          <div class="mb-3">
+             <label>sub category image</label>
+             <input type="file" class="form-control" name="sub_category_image" accept="image/jpeg"  value={{d.sub_category_image}}>
+            </div>
+          <div class="form-group">
+             <label>sub category code</label>
+             <input type="text" class="form-control" name="sub_category_code" value={{d.sub_category_code}}>
+          </div>
+         
+          <div class="form-group">
+            <label>sub category status</label>
+            
+            <select name="sub_category_status" class="form-control form-control-sm mb-3" >
+
+               <option value="Active" {% if d.sub_category_status == 'Active' %}selected{% endif %}>Active</option>
+               <option value="InActive" {% if d.sub_category_status == 'InActive' %}selected{% endif %}>InActive</option>
+            </select>
+         </div>
+
+       
+           <br><br>
+          {% comment %} <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+               status
+            </button>
+            <ul class="dropdown-menu">
+               <li><a class="dropdown-item" href="#">Active</a></li>
+               <li><a class="dropdown-item" href="#">InActive</a></li>
+            </ul>
+           </div>
+         </div> {% endcomment %}
+        
+          <button type="submit" class="btn btn-primary">Submit</button>&nbsp;&nbsp;
+          <a type="submit" href="{% url 'show_subcategory' %}" class="btn iq-bg-danger">Cancel</a> 
+
+         </form>
+    </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}
