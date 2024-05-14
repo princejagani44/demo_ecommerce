@@ -182,10 +182,12 @@ def add_product(request):
         print(category_id,'category_id')
         cat_obj=Category.objects.get(id=category_id)
 
-
-        sub_category_id = request.POST.get('sub_cat_id')
-        sub_cat_obj=Sub_Category.objects.get(id=sub_category_id)
-
+        try:
+            sub_category_id = request.POST.get('sub_cat_id')
+            sub_cat_obj=Sub_Category.objects.get(id=sub_category_id)
+            product.sub_category_id=sub_cat_obj
+        except:
+            pass
        
         
 
@@ -203,7 +205,7 @@ def add_product(request):
         # product.product_status=product_status
        
         product.category_id=cat_obj
-        product.sub_category_id=sub_cat_obj
+        
         # product.brand_id=brand_obj
        
 

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-m4x+!+cq!rmwget(w)y3x=n7)m6#ltzl#3twi9$1$w00l^u(h8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'demo_admin',
     'rest_framework',
+    "corsheaders",
+
 ]
 
 MIDDLEWARE = [
@@ -49,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'demo_ecommerce.urls'
@@ -99,9 +103,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+],
+
+CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.0.167:8000",
+    "http://127.0.0.1:8000",
+
 ]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+   "http://192.168.0.167:8000",
+    "http://127.0.0.1:8000",
 
-
+]
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
