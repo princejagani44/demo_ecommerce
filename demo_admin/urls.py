@@ -3,8 +3,20 @@ from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
 from demo_admin import views
+from rest_framework.routers import DefaultRouter
+from .api import *
+router = DefaultRouter()
+
+router.register(r'categories', categoryviewsets, basename='categories')
+router.register(r'subcategories', subcategoryviewsets, basename='subcategories')
+router.register(r'products', productviewsets, basename='products')
+
 
 urlpatterns = [
+
+    path('api/',include(router.urls)),
+
+
     path('dashboard/',views.dashboard,name='dashboard'),
     path('',views.start_up,name='start_up'),
 
